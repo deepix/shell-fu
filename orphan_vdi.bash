@@ -33,7 +33,8 @@ function vdis_processor () {
 	vdis=`xe vdi-list sr-uuid=$sr_uuid params=uuid managed=true --minimal`
 
 	for vdi in `echo $vdis | tr ',' ' '` ; do
-		vm_name=`xe vbd-list vdi-uuid=$vdi params=vm-name-label | grep vm | awk '{ print $NF }'`
+		vbd_vm_name=`xe vbd-list vdi-uuid=$vdi params=vm-name-label`
+                vm_name=${vbd_vm_name#vm-name-label*:}
 		if [ $do_delete == 1 ] ; then
 			if [ "$vm_name" == "" ] ; then
 				echo -e "DO_DEL\t$vdi"
